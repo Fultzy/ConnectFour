@@ -7,7 +7,7 @@ class Gamestate
   attr_reader :player1, :player2, :game_over
   attr_accessor :grid
 
-  # grid holds 7 columns, each column holds 6 row placeholders
+  # grid holds 7 columns(empty arrays, max size == 6)
   def initialize(option1 = false, option2 = false)
     @turn = 1
     @grid = Array.new(7) { [] }
@@ -16,13 +16,12 @@ class Gamestate
     @game_over = false
   end
 
-  ######## Checker placment (assending order)
+  ######## Checker placment (assending order like irl)
   def place_checker(column)
-    if column.nil?
-      :retry
-    elsif column.size < 6
+    if column.size < 6
       column.push(player.color)
       checker_checker
+      # checker_win(column)
       @turn += 1
     else
       :retry
@@ -33,19 +32,66 @@ class Gamestate
     @turn.odd? ? @player1 : @player2
   end
 
-  ######## Win Condition
+  ######## Win Conditions
+  # checks players checkers for lack of checkers
   def checker_checker
-    @game_over = false # no win 4 u
-    # checks if all columns are full
-    # checks the checkers for checker wins
+    if @player1.checkers == 0 || @player2.checkers == 0
+      game_over = true
+    end
+  end
+
+  # pulls from @grid (targetting the last value in column) adds to arrays
+  # if any array includes 4 checkers in a row from a single player
+  def checker_win(column)
+    color = player.color
+    col_index = column.size - 1
+    row = create_row_array(col_index)
+    ascending = create_ascending_array(column, col_index)
+    descending = create_descending_array(column, col_index)
+    case @game_over
+  # => horizontal
+    when row <=> [color, color, color, color]
+      player
+
+  # => vertical
+    when "banana"
+      #player.wins
+
+  # => diaginal ascending
+    when "potato"
+      #player.wins
+
+  # => descending
+    when "grapes"
+      #player.wins
+
+    else
+      nil
+    end
+  end
+
+  #### Array Creation ####
+  def create_row_array(row, col = -1, array = [])
+    unless col > 6
+      array.push(@grid[col += 1][row])
+      create_row_array(row, col, array)
+    end
+  end
+
+  def create_ascending_array(col,row)
+  end
+
+  def create_descending_array(col,row)
+  end
+
+
+
+  def request_replay?
   end
 
   ######## Game Controls
-
   def game_reset
-    @grid = Array.new(7) { [] }
-    @player1.checkers = 21
-    @player2.checkers = 21
+    initialize
   end
 
   def show_grid(col = 0, row = 5)

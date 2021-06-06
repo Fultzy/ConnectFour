@@ -9,4 +9,14 @@ class Player
     @color = color
     @checkers = 21
   end
+
+  def input_request
+    puts 'Enter a number'
+    print "#{@name}'s turn =>"
+    gets.chomp.to_i - 1
+  end
+
+  def wins
+    puts "#{@name} wins!"
+  end
 end

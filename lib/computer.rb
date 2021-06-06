@@ -9,4 +9,17 @@ class Computer
     @color = color
     @checkers = 21
   end
+
+  def input_request
+    input = rand(0..6) # =>  just picks a random number for now
+    puts 'Enter a number'
+    sleep(0.2)
+    print "#{@name}'s turn => #{input + 1}"
+    puts ''
+    input
+  end
+
+  def wins
+    puts "#{@name} wins!"
+  end
 end

@@ -10,8 +10,13 @@ describe Player do
       it 'a name is assigned to it' do
         expect(player.name).to eql('Foo')
       end
+
       it 'a color is assigned to it' do
         expect(player.color).to eql(:black)
+      end
+
+      it 'it starts with 21 checkers' do
+        expect(player.checkers).to eql(21)
       end
     end
   end

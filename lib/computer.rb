@@ -12,8 +12,7 @@ class Computer
 
   def input_request
     input = rand(0..6) # =>  just picks a random number for now
-    puts 'Enter a number'
-    sleep(0.2)
+    sleep(0.08)
     print "#{@name}'s turn => #{input + 1}"
     puts ''
     input

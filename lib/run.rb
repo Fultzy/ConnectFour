@@ -2,30 +2,23 @@
 
 require_relative 'gamestate'
 
-def input_request_column
-  puts 'enter a nomber:'
-  print "#{@game.player.name} =>"
-  input = gets.chomp.to_i
-  @game.place_checker(@grid[input - 1])
-end
-
+#### Game Flow ####
 @game = Gamestate.new
+@game.grid_view
 
 until @game.game_over == true
+  puts ''
   if @game.checker_checker
+    @game.grid_view
     puts ' RESETTING'
-    sleep(1.5)
+    sleep(0.5)
     @game.game_reset
   else
-    puts ''
-    @game.show_grid
-    puts ''
-    puts '-----------------------------------'
-    puts '  1    2    3    4    5    6    7'
-    puts "#{@game.player.color} checkers left: #{@game.player.checkers -= 1}"
+    @game.grid_view
+    puts "#{@game.player.name} checkers left: #{@game.player.checkers}"
     @game.place_checker(@game.grid[@game.player.input_request])
   end
 end
 
-puts ''
+@game.grid_view
 puts 'Thanks for playing!'

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require './lib/computer'
 
 describe Computer do
   let(:player) { Computer.new('FooBot', :white) }
 
   describe '#initialize' do
-    context 'When a new player is created' do
+    context 'When a new Computer player is created' do
       it 'a name is assigned to it' do
         expect(player.name).to eql('FooBot')
       end

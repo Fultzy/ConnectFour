@@ -43,7 +43,7 @@ describe Gamestate do
 
       it 'stops adding checkers if column is full, requests retry' do
         6.times { game.place_checker(subject) }
-        expect(game.place_checker(subject)).to eql(:retry) #placehodlr
+        expect(game.place_checker(subject)).to eql(:retry) # placehodlr
       end
     end
   end
@@ -56,36 +56,36 @@ describe Gamestate do
       it 'ends the game, asks for another game.' do
         player1.checkers = 0
         player2.checkers = 0
-        expect(game.checker_checker).to (be true)
+        expect(game.checker_checker).to(be true)
       end
     end
   end
 
   describe '#checker_win' do
     context 'after a checker is placed the Grid is checked for ConnectFour' do
-
-      xit 'returns correct player.wins if 4 horizontal checkers are present' do
-        2.times { game.place_checker(grid[0]) }
-        2.times { game.place_checker(grid[1]) }
-        2.times { game.place_checker(grid[2]) }
-        1.times { game.place_checker(grid[3]) }
+      it 'returns correct player.wins if 4 horizontal checkers are present' do
+        grid[1] = [:white, :white]
+        grid[2] = [:black, :white]
+        grid[3] = [:black, :white]
+        grid[4] = [:black, :white]
         expect(game.checker_win(grid[3])).to eql(player1)
       end
 
-      xit 'returns player if 4 vertical checkers are present' do
-        expect(game.checker_win).to eql(player2)
+      it 'returns player if 4 vertical checkers are present' do
+        grid[3] = [:black, :black, :black, :black]
+        expect(game.checker_win(grid[3])).to eql(player2)
       end
 
       xit 'returns player if 4 descending diaginal checkers are present' do
-        expect(game.checker_win).to eql(player1)
+        expect(game.checker_win).to eql(player1.wins)
       end
 
       xit 'returns player if 4 ascending diaginal checkers are present' do
-        expect(game.checker_win).to eql(player2)
+        expect(game.checker_win).to eql(player2.wins)
       end
 
-      xit 'if no win conditions are met no action is taken' do
-        expect(game.checker_win(grid[0])).to (be nil)
+      it 'if no win conditions are met no action is taken' do
+        expect(game.checker_win(grid[0])).to(be nil)
       end
     end
   end

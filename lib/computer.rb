@@ -17,8 +17,4 @@ class Computer
     puts ''
     input
   end
-
-  def wins
-    puts "#{@name} wins!"
-  end
 end

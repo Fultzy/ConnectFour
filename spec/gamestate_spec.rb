@@ -5,7 +5,6 @@ require './lib/gamestate'
 describe Gamestate do
   let(:game) { Gamestate.new(true, false) }
   let(:grid) { game.grid }
-  p 'inside main describe'
 
   describe '#initialize' do
     context 'When a new game is created' do
@@ -36,11 +35,6 @@ describe Gamestate do
         expect(subject).to eql([:white])
       end
 
-      it 'correct checker is placed over an existing checker' do
-        2.times { game.place_checker(subject) }
-        expect(subject).to eql(%i[white black])
-      end
-
       it 'stops adding checkers if column is full, requests retry' do
         6.times { game.place_checker(subject) }
         expect(game.place_checker(subject)).to eql(:retry) # placehodlr
@@ -61,31 +55,52 @@ describe Gamestate do
     end
   end
 
+  describe '#four_in_a_row?' do
+    context 'when passed an array' do
+      it 'returns true if 4 of the same object are consecutive' do
+        expect(game.four_in_a_row?(%i[orange banana banana banana banana orange])).to(be true)
+      end
+
+      it 'returns false if 4 consecutive nil objects are present' do
+        expect(game.four_in_a_row?([nil, nil, nil, nil])).to(be false)
+      end
+
+      it 'returns false if less than 4 objects are present' do
+        expect(game.four_in_a_row?(%i[apples oranges bananas])).to(be false)
+      end
+
+      it 'returns false if 4 objects are present, but are different' do
+        expect(game.four_in_a_row?(%i[apples oranges bananas potatos])).to(be false)
+      end
+    end
+  end
+
   describe '#checker_win' do
     context 'after a checker is placed the Grid is checked for ConnectFour' do
-      it 'returns correct player.wins if 4 horizontal checkers are present' do
-        grid[1] = [:white, :white]
-        grid[2] = [:black, :white]
-        grid[3] = [:black, :white]
-        grid[4] = [:black, :white]
-        expect(game.checker_win(grid[3])).to eql(player1)
+      it 'returns true if 4 horizontal checkers are present' do
+        grid[1] = %i[white white]
+        grid[2] = %i[black white]
+        grid[3] = %i[black white]
+        grid[4] = %i[black white]
+        expect(game.checker_win(3)).to eql(true)
       end
 
-      it 'returns player if 4 vertical checkers are present' do
-        grid[3] = [:black, :black, :black, :black]
-        expect(game.checker_win(grid[3])).to eql(player2)
+      it 'if 4 vertical checkers are present returns true' do
+        grid[3] = %i[black black black black]
+        expect(game.checker_win(3)).to eql(true)
       end
 
-      xit 'returns player if 4 descending diaginal checkers are present' do
-        expect(game.checker_win).to eql(player1.wins)
+      it 'if 4 descending diaginal checkers are present returns true' do
+        expect(game.checker_win).to eql(player1)
       end
 
-      xit 'returns player if 4 ascending diaginal checkers are present' do
-        expect(game.checker_win).to eql(player2.wins)
+      it 'if 4 ascending diaginal checkers are present returns true' do
+        expect(game.checker_win).to eql(player2)
       end
 
-      it 'if no win conditions are met no action is taken' do
-        expect(game.checker_win(grid[0])).to(be nil)
+      it 'if no win conditions are met retruns false' do
+        grid[5] = %i[white]
+        expect(game.checker_win(5)).to(be false)
       end
     end
   end

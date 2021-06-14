@@ -15,8 +15,4 @@ class Player
     print "#{@name}'s turn =>"
     gets.chomp.to_i - 1
   end
-
-  def wins
-    puts "#{@name} wins!"
-  end
 end

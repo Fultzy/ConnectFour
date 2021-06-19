@@ -2,9 +2,11 @@
 
 require_relative 'gamestate'
 
-#### Game Flow ####
+# Gamestate.new(true) for single player
+# Gamestate.new(true, true) for two player
 @game = Gamestate.new
 
+#### Game Flow ####
 until @game.game_over == true
   if @game.checker_checker
     puts 'RESETTING'

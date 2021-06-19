@@ -56,7 +56,7 @@ class Gamestate
     row = create_row_array(col_index)
     ascending = create_ascending_array(@grid[input], col_index)
     descending = create_descending_array(@grid[input], col_index)
-    # => vertical
+
     if four_in_a_row?(@grid[input]) || four_in_a_row?(row) || four_in_a_row?(ascending) || four_in_a_row?(descending)
       @game_over = true
     else

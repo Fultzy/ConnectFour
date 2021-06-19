@@ -82,24 +82,32 @@ describe Gamestate do
         grid[2] = %i[black white]
         grid[3] = %i[black white]
         grid[4] = %i[black white]
-        expect(game.checker_win(3)).to eql(true)
+        expect(game.checker_win(3)).to(be true)
       end
 
       it 'if 4 vertical checkers are present returns true' do
         grid[3] = %i[black black black black]
-        expect(game.checker_win(3)).to eql(true)
+        expect(game.checker_win(3)).to(be true)
       end
 
       it 'if 4 descending diaginal checkers are present returns true' do
-        expect(game.checker_win).to eql(player1)
+        grid[0] = [nil, nil,nil,:black]
+        grid[1] = [nil, nil, :black]
+        grid[2] = [nil, :black]
+        grid[3] = [:black]
+        expect(game.checker_win(0)).to(be true)
       end
 
       it 'if 4 ascending diaginal checkers are present returns true' do
-        expect(game.checker_win).to eql(player2)
+        grid[0] = [:black]
+        grid[1] = [nil, :black]
+        grid[2] = [nil, nil, :black]
+        grid[3] = [nil, nil,nil,:black]
+        expect(game.checker_win(1)).to(be true)
       end
 
       it 'if no win conditions are met retruns false' do
-        grid[5] = %i[white]
+        grid[5] = %i[apples bannanas oranges grapes]
         expect(game.checker_win(5)).to(be false)
       end
     end

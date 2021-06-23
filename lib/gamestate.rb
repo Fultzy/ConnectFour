@@ -15,19 +15,6 @@ class Gamestate
     @game_over = false
   end
 
-  def player
-    @turn.odd? ? @player1 : @player2
-  end
-
-  def turn
-    grid_view
-    input = player.input_request
-    place_checker(@grid[input])
-    checker_win(input)
-    checker_checker
-    @turn += 1
-  end
-
   #### Checker placment (vertical order like irl)
   def place_checker(column)
     if column.size < 6
@@ -50,15 +37,16 @@ class Gamestate
     end
   end
 
-  #### Win Conditions ( should be a Class? )
+  #### Win Conditions
   def checker_win(input)
     col_index = @grid[input].size - 1
     row = create_row_array(col_index)
-    ascending = create_ascending_array(@grid[input], col_index)
-    descending = create_descending_array(@grid[input], col_index)
+    ascending = create_ascending_array(input, col_index)
+    descending = create_descending_array(input, col_index)
 
-    if four_in_a_row?(@grid[input]) || four_in_a_row?(row) || four_in_a_row?(ascending) || four_in_a_row?(descending)
+    if four_in_a_row?(ascending) || four_in_a_row?(descending) || four_in_a_row?(@grid[input]) || four_in_a_row?(row)
       @game_over = true
+      # player.wins
     else
       false
     end
@@ -74,24 +62,40 @@ class Gamestate
   end
 
   def create_ascending_array(col, row, array = [])
-    return if col.nil? || row < 7
+    return array if col > 6 || row > 5
 
-    array.push(@grid[col][row])
-    create_ascending_array(col - 1, row + 1, array)
-    create_ascending_array(col + 1, row - 1, array)
-    array
+    if array.empty?
+      if col > row
+        array.push(@grid[col - row][0])
+        create_ascending_array(col - row + 1, 1, array)
+      else
+        array.push(@grid[0][row - col])
+        create_ascending_array(1, row - col + 1, array)
+      end
+    else
+      array.push(@grid[col][row])
+      create_ascending_array(col + 1, row + 1, array)
+    end
   end
 
   def create_descending_array(col, row, array = [])
-    return if col.nil? || row < 7
 
-    array.push(@grid[col][row])
-    top_array = create_ascending_array(col + 1, row - 1, array)
-    bottom_array = create_ascending_array(col - 1, row + 1, array)
-    p top_array.reverse.concat(bottom_array)
   end
 
   #### Game Controls
+  def player
+    @turn.odd? ? @player1 : @player2
+  end
+
+  def turn
+    grid_view
+    input = player.input_request
+    place_checker(@grid[input])
+    checker_win(input)
+    checker_checker
+    @turn += 1
+  end
+
   def game_reset
     initialize
   end
@@ -100,7 +104,7 @@ class Gamestate
     game_over = true if @player1.checkers.zero? || @player2.checkers.zero?
   end
 
-  def request_replay?; end
+  def request_replay; end
 
   def grid_view
     puts ''
@@ -111,7 +115,6 @@ class Gamestate
     puts "#{player.name} checkers left: #{player.checkers}"
   end
 
-  # => helper method
   def printy_gridy(col = 0, row = 5)
     case @grid[col][row]
     when :white

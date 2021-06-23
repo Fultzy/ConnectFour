@@ -42,14 +42,12 @@ describe Gamestate do
     end
   end
 
-  let(:player1) { game.player1 }
-  let(:player2) { game.player2 }
 
   describe '#checker_checker' do
     context 'When both players have zero checkers' do
       it 'ends the game, asks for another game.' do
-        player1.checkers = 0
-        player2.checkers = 0
+        game.player1.checkers = 0
+        game.player2.checkers = 0
         expect(game.checker_checker).to(be true)
       end
     end
@@ -59,6 +57,10 @@ describe Gamestate do
     context 'when passed an array' do
       it 'returns true if 4 of the same object are consecutive' do
         expect(game.four_in_a_row?(%i[orange banana banana banana banana orange])).to(be true)
+      end
+
+      it 'returns false if array is empty' do
+        expect(game.four_in_a_row?([])).to (be false)
       end
 
       it 'returns false if 4 consecutive nil objects are present' do
@@ -77,6 +79,11 @@ describe Gamestate do
 
   describe '#checker_win' do
     context 'after a checker is placed the Grid is checked for ConnectFour' do
+      it 'if 4 vertical checkers are present returns true' do
+        grid[3] = %i[black black black black]
+        expect(game.checker_win(3)).to(be true)
+      end
+
       it 'returns true if 4 horizontal checkers are present' do
         grid[1] = %i[white white]
         grid[2] = %i[black white]
@@ -85,24 +92,19 @@ describe Gamestate do
         expect(game.checker_win(3)).to(be true)
       end
 
-      it 'if 4 vertical checkers are present returns true' do
-        grid[3] = %i[black black black black]
-        expect(game.checker_win(3)).to(be true)
-      end
-
       it 'if 4 descending diaginal checkers are present returns true' do
         grid[0] = [nil, nil,nil,:black]
         grid[1] = [nil, nil, :black]
         grid[2] = [nil, :black]
         grid[3] = [:black]
-        expect(game.checker_win(0)).to(be true)
+        expect(game.checker_win(2)).to(be true)
       end
 
       it 'if 4 ascending diaginal checkers are present returns true' do
         grid[0] = [:black]
         grid[1] = [nil, :black]
         grid[2] = [nil, nil, :black]
-        grid[3] = [nil, nil,nil,:black]
+        grid[3] = [nil, nil, nil,:black]
         expect(game.checker_win(1)).to(be true)
       end
 
